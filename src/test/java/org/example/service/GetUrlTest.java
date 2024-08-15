@@ -1,12 +1,14 @@
 package org.example.service;
 
 
+import org.example.service.getUrl.Url;
+
 class GetUrlTest {
 
   //check if URL is being recived
   public static void main(String[] args) {
     //given //when
-    var result = GetUrl.getUrlFromUser();
+    var result = Url.getUrlFromUser();
     boolean r = !result.isEmpty();
 
     //then

@@ -9,17 +9,16 @@ import java.util.regex.Pattern;
 
 public class Parser {
 
+  private final static String UL_OPEN = "<ul>";
+  private final static String UL_CLOSE = "</ul>";
+  private final static String LI_OPEN = "<li>";
+  private final static String LI_CLOSE = "</li>";
+
   public static String analyze(String html) {
     var findAllUl = findAllUl(html);
     var onlyULAndLi = leaveOnlyHypertext(findAllUl);
     var elementsList = putIntoList(onlyULAndLi);
     elementsList = cleanList(elementsList);
-
-
-//    List<String> mergedList = mergeInList(elementsList);
-//    for (String element : mergedList) {
-//      System.out.println(element);
-//    }
 
     return findMaxDirectChildren(elementsList);
   }
@@ -36,18 +35,18 @@ public class Parser {
     while (iterator.hasNext()) {
       String element = iterator.next();
 
-      if (element.equals("<ul>")) {
+      if (element.equals(UL_OPEN)) {
         embededStage++;
-      } else if (element.equals("<li></li>") && embededStage == 1 && parentUl) {
+      } else if (element.equals(LI_OPEN.concat(LI_CLOSE)) && embededStage == 1 && parentUl) {
         int value = map.getOrDefault(embededStage, 0);
         value++;
         map.put(embededStage, value);
 
-      } else if (element.equals("<li>") && embededStage == 1 && parentUl) {
+      } else if (element.equals(LI_OPEN) && embededStage == 1 && parentUl) {
         int value = map.getOrDefault(embededStage, 0);
         value++;
         map.put(embededStage, value);
-      } else if (element.equals("</ul>")) {
+      } else if (element.equals(UL_CLOSE)) {
         if (embededStage == 1) {
           parentUl = false;
         }
@@ -81,24 +80,6 @@ public class Parser {
     }
 
     return cleanedList;
-  }
-
-  private static List<String> mergeInList(List<String> list) {
-    List<String> mergedList = new ArrayList<>();
-
-    for (int i = 0; i < list.size(); i++) {
-      String current = list.get(i);
-
-      if (current.equals("<li>") && i + 1 < list.size() && list.get(i + 1)
-          .equals("</li>")) {
-        mergedList.add("<li></li>");
-        i++;
-      } else {
-        mergedList.add(current);
-      }
-    }
-
-    return mergedList;
   }
 
   private static List<String> putIntoList(String onlyULAndLi) {
