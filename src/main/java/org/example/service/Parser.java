@@ -3,6 +3,7 @@ package org.example.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +32,7 @@ public class Parser {
     boolean parentUl = true;
 
 
-    HashMap<Integer, Integer> map = new HashMap<>();
+    LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
     while (iterator.hasNext()) {
       String element = iterator.next();
 
@@ -53,13 +54,8 @@ public class Parser {
         embededStage--;
       }
     }
-
-    try {
-      return map.get(1)
-          .toString();
-    } catch (NullPointerException e) {
-      return "there are any <ul> selectors";
-    }
+    return map.getOrDefault(1, 0)
+        .toString();
   }
 
 
@@ -96,11 +92,6 @@ public class Parser {
 
 
   private static String findAllUl(String htmlContent) {
-    int startIndex = htmlContent.indexOf("<ul");
-    if (startIndex != -1) {
-      htmlContent = htmlContent.substring(startIndex);
-    }
-
     StringBuilder ulContent = new StringBuilder();
     Pattern pattern = Pattern.compile("<ul[^>]*>.*?</ul>|<li[^>]*>.*?</li>|</ul>|</li>", Pattern.DOTALL);
     Matcher matcher = pattern.matcher(htmlContent);
