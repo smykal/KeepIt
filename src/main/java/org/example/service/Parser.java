@@ -93,7 +93,9 @@ public class Parser {
 
   private static String findAllUl(String htmlContent) {
     int startIndex = htmlContent.indexOf("<ul");
-    htmlContent = htmlContent.substring(startIndex);
+    if (startIndex != -1) {
+      htmlContent = htmlContent.substring(startIndex);
+    }
 
     StringBuilder ulContent = new StringBuilder();
     Pattern pattern = Pattern.compile("<ul[^>]*>.*?</ul>|<li[^>]*>.*?</li>|</ul>|</li>", Pattern.DOTALL);
