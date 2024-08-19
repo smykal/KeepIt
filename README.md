@@ -31,7 +31,7 @@ Implement this using only the standard library.                                 
 
 5. tests
     * folder src/main/resources contains tests
-    * tests are without external libraries like JUnit5 or Mockito
+    * tests with JUnit5 (I assume that it is standard library)
 6. Main.class
     * main class is located at:  src/main/java/org/example/Main.java
 

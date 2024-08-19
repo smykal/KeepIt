@@ -1,36 +1,37 @@
 package org.example.service;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
 class ParserTest {
-  public static void main(String[] args) {
 
-    //check if there is no <li>
-    //given
-    String html_1 = "<html><body><p>Content</p></body></html>";
-    //when
-    var result_1 = Parser.analyze(html_1);
-    //then
-    boolean r_1 = result_1.equals("there are any <ul> selectors");
-    System.out.println("Check if no ul found:" + r_1);
+  @Test
+  void testAnalyze_simpleList() {
+    String html = "<ul><li>Item 1</li><li>Item 2</li></ul>";
+    String result = Parser.analyze(html);
+    assertEquals("2", result, "Should return '2' as there are 2 direct children in the root <ul>");
+  }
 
+  @Test
+  void testAnalyze_nestedList() {
+    String html = "<ul><li>Item 1</li><li>Item 2<ul><li>Subitem 1</li></ul></li><li>Item 3</li></ul>";
+    String result = Parser.analyze(html);
+    assertEquals("3", result, "Should return '3' as there are 3 direct children in the root <ul>");
+  }
 
-    //check if there are 3 <li>
-    //given
-    String html_2 = "<html><body><p><ul><li>Content</li><li>Content</li><li>Content</li></ul></p></body></html>";
-    //when
-    var result_2 = Parser.analyze(html_2);
-    //then
-    boolean r_2 = result_2.equals("3");
-    System.out.println("Checki if found 3 <li>: " + r_2);
+  @Test
+  void testAnalyze_listWithAttributes() {
+    String html = "<ul id='list'><li class='item'>Item 1</li><li>Item 2</li></ul>";
+    String result = Parser.analyze(html);
+    assertEquals("2", result, "Should return '2' ignoring any attributes in the tags");
+  }
 
-    //check if there are 3 <li> even with embeded <ul> list inside master list
-    //given
-    String html_3 = "<html><body><p><ul><li>Content</li><li>Content</li><li><ul><li>Content</li><li>Content</li><li>Content</li></ul>/li></ul></p></body></html>";
-    //when
-    var result_3 = Parser.analyze(html_3);
-    //then
-    boolean r_3 = result_3.equals("3");
-    System.out.println("Checki if found 3 <li> even with ebeded list: " + r_3);
-
+  @Test
+  void testAnalyze_complexNestedLists() {
+    String html = "<ul><li>Item 1<ul><li>Subitem 1</li><li>Subitem 2<ul><li>Subsubitem 1</li></ul></li></ul></li><li>Item 2</li></ul>";
+    String result = Parser.analyze(html);
+    assertEquals("2", result, "Should return '2' as there are 2 direct children in the root <ul>");
   }
 }
